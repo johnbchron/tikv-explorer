@@ -77,23 +77,26 @@ pub fn Value(
     }
   });
 
-  let badge_name = match value {
-    values::Value::MessagePack(_) => "MsgPack",
-    values::Value::Json(_) => "Json",
-    values::Value::String(_) => "String",
-    values::Value::Bytes(_) => "Bytes",
+  let codec_badge_text = match value.contents() {
+    values::ValueContents::MessagePack(_) => "MsgPack",
+    values::ValueContents::Json(_) => "Json",
+    values::ValueContents::String(_) => "String",
+    values::ValueContents::Bytes(_) => "Bytes",
   };
 
-  let badge_class_color = match value {
-    values::Value::MessagePack(_) => "badge-flat-primary",
-    values::Value::Json(_) => "badge-flat-secondary",
-    values::Value::String(_) => "badge-flat-success",
-    values::Value::Bytes(_) => "badge-flat-danger",
+  let codec_badge_class_color = match value.contents() {
+    values::ValueContents::MessagePack(_) => "badge-flat-primary",
+    values::ValueContents::Json(_) => "badge-flat-secondary",
+    values::ValueContents::String(_) => "badge-flat-success",
+    values::ValueContents::Bytes(_) => "badge-flat-danger",
   };
+
+  let size_badge_text = value.size_pretty();
 
   let container_class =
     format!("flex flex-row items-center gap-2 overflow-hidden {class}");
-  let badge_class = format!("badge flex-none {badge_class_color}");
+  let codec_badge_class = format!("badge flex-none {codec_badge_class_color}");
+  let size_badge_class = "badge flex-none";
   let display_class = move || {
     format!(
       "flex-auto font-mono truncate {}",
@@ -116,7 +119,8 @@ pub fn Value(
 
   view! {
     <div class=container_class>
-      <span class=badge_class> { badge_name } </span>
+      <span class=codec_badge_class> { codec_badge_text } </span>
+      <span class=size_badge_class> { size_badge_text } </span>
       <span class=display_class> { display } </span>
       <button class="flex-none" on:click=toggle_long>
         <HeroIconsChevronDown {..} class=expand_icon_class />
@@ -189,7 +193,7 @@ pub fn Pairs() -> impl IntoView {
 #[component]
 pub fn HomePage() -> impl IntoView {
   view! {
-    <div class="container mx-auto">
+    <div class="mx-8">
       <div class="mb-8" />
       <Pairs />
     </div>
