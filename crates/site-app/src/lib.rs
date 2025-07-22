@@ -97,7 +97,11 @@ pub fn Value(
   let display_class = move || {
     format!(
       "flex-auto font-mono truncate {}",
-      if long() { "whitespace-pre-wrap" } else { "" }
+      if long() {
+        "whitespace-pre-wrap break-all"
+      } else {
+        ""
+      }
     )
   };
   let expand_icon_class = move || {
